@@ -57,6 +57,10 @@ python XGBoost.py
   - Performs a comparative analysis of all models.
   - Displays/saves a comparison plot or table showing which model performs best.****
 
-
-
+- Step 4: Running the Streamlit Dashboard
+  Run the Streamlit Dashboard by entering the command
+```
+streamlit run dashboard.py
+```
+- Output: Creates a Streamlit Dashboard at localhost which can be viewed inside the browser.
 
