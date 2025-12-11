@@ -3,9 +3,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import shap
+import matplotlib.pyplot as plt
 
 # 1. Load the trained model
-# Ensure 'rf_model.pkl' is in the same directory
 try:
     model = joblib.load('rf_model.pkl')
 except FileNotFoundError:
@@ -19,25 +20,33 @@ st.set_page_config(
     layout="wide"
 )
 
-# 3. Header and Description
+# 3. Cache the SHAP Explainer (Optimization)
+# We use @st.cache_resource because the explainer object is large and static
+@st.cache_resource
+def get_explainer(_model):
+    # TreeExplainer is optimized for Random Forest, XGBoost, etc.
+    return shap.TreeExplainer(_model)
+
+explainer = get_explainer(model)
+
+# 4. Header and Description
 st.title("🛡️ AI HealthGuard Dashboard")
 st.markdown("""
-**Welcome, Doctor.** This system uses a Random Forest Machine Learning model (trained on the UCI Heart Disease dataset) 
-to assess the likelihood of heart disease in patients based on their clinical parameters.
+**Welcome, Doctor.** This system uses a Random Forest Machine Learning model to assess heart disease risk.
+It also provides **Explainable AI (XAI)** insights to justify predictions based on patient vitals.
 """)
 
 st.sidebar.header("Patient Data Input")
 
-# 4. Input Fields (Based on UCI Heart Disease Features)
+# 5. Input Fields (Based on UCI Heart Disease Features)
 def user_input_features():
     # Age
     age = st.sidebar.number_input("Age", min_value=1, max_value=120, value=50)
     
-    # Sex (0 = Female, 1 = Male)
+    # Sex
     sex = st.sidebar.selectbox("Sex", options=[0, 1], format_func=lambda x: "Male" if x == 1 else "Female")
     
     # Chest Pain Type (cp)
-    # Mapping based on typical UCI dataset standards
     cp = st.sidebar.selectbox("Chest Pain Type", options=[0, 1, 2, 3], 
                               format_func=lambda x: {
                                   0: "Typical Angina", 
@@ -83,7 +92,7 @@ def user_input_features():
     thal = st.sidebar.selectbox("Thalassemia", options=[1, 2, 3], 
                                 format_func=lambda x: {1: "Normal", 2: "Fixed Defect", 3: "Reversable Defect"}[x])
 
-    # Create a DataFrame
+    # Create a DataFrame with correct column names matching training
     data = {
         'age': age, 'sex': sex, 'cp': cp, 'trestbps': trestbps, 'chol': chol,
         'fbs': fbs, 'restecg': restecg, 'thalach': thalach, 'exang': exang,
@@ -94,26 +103,64 @@ def user_input_features():
 
 input_df = user_input_features()
 
-# 5. Display User Input
-st.subheader("Patient Vitals Overview")
-st.write(input_df)
+# 6. Main Layout: Two Columns
+col1, col2 = st.columns([1, 1])
 
-# 6. Prediction Logic
+with col1:
+    st.subheader("Patient Vitals")
+    st.write(input_df)
+
+# 7. Prediction Logic
 if st.button("Analyze Risk"):
-    prediction = model.predict(input_df)
+    # Probability prediction (returns [prob_class_0, prob_class_1])
+    # Note: Ensure your model returns standard sklearn probabilities
     probability = model.predict_proba(input_df)
+    risk_score = probability[0][1] # Probability of Class 1 (Disease)
     
-    st.subheader("Assessment Result")
+    st.divider()
     
-    if prediction[0] == 1:
-        st.error(f"⚠️ High Risk of Heart Disease Detected")
-        st.write(f"**Confidence:** {np.max(probability) * 100:.2f}%")
-        st.warning("Recommendation: Immediate cardiology consultation recommended.")
-    else:
-        st.success(f"✅ Low Risk - Heart appears healthy")
-        st.write(f"**Confidence:** {np.max(probability) * 100:.2f}%")
-        st.info("Recommendation: Maintain healthy lifestyle and routine checkups.")
+    # Display Result
+    col_res1, col_res2 = st.columns([1, 2])
+    
+    with col_res1:
+        if risk_score > 0.5:
+            st.error(f"⚠️ High Risk Detected")
+            st.metric(label="Risk Probability", value=f"{risk_score * 100:.1f}%")
+        else:
+            st.success(f"✅ Low Risk Profile")
+            st.metric(label="Risk Probability", value=f"{risk_score * 100:.1f}%")
+            
+    with col_res2:
+        st.info("The chart below explains WHY the model made this prediction.")
 
-# 7. Sidebar Info
+    # 8. SHAP Explanation
+    st.subheader("Model Decision Factors (SHAP Analysis)")
+    with st.spinner("Calculating explainability scores..."):
+        # Calculate SHAP values for this specific instance
+        shap_values = explainer(input_df)
+        
+        # We need to access the values for class 1 (Disease)
+        # Random Forests in sklearn return values for both classes [0, 1]
+        # We handle this by checking the shape. 
+        if len(shap_values.values.shape) == 3:
+             # Shape: (1 sample, n_features, 2 classes) -> Take class 1
+            shap_values_class1 = shap_values[:, :, 1]
+        else:
+            shap_values_class1 = shap_values
+            
+        # Create the plot using Matplotlib
+        fig, ax = plt.subplots(figsize=(8, 5))
+        shap.plots.waterfall(shap_values_class1[0], show=False)
+        st.pyplot(fig, bbox_inches='tight')
+        
+    st.markdown("""
+    **How to read this chart:**
+    * **Red bars** push the risk score **HIGHER**.
+    * **Blue bars** push the risk score **LOWER**.
+    * The values (E[f(x)]) represent the average base rate, and f(x) is the final prediction score.
+    """)
+
+# Sidebar Info
 st.sidebar.markdown("---")
-st.sidebar.info("AI HealthGuard v1.0\nModel: Random Forest Classifier")
+st.sidebar.info("AI HealthGuard v2.0\nModel: Random Forest + SHAP")
+# %%
