@@ -1,3 +1,4 @@
+#%%
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -7,21 +8,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from IPython.display import display
-
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
-    roc_auc_score, roc_curve, confusion_matrix, ConfusionMatrixDisplay,
-    classification_report
-)
-
-from xgboost import XGBClassifier
-import shap
-import joblib
-import os
 
 sns.set_theme(style="whitegrid")
 plt.rcParams["figure.figsize"] = (8, 5)
@@ -113,3 +99,5 @@ sample_features = X.columns[:4]
 sns.pairplot(df[list(sample_features) + [TARGET_COL]], hue=TARGET_COL)
 plt.suptitle("Pairplot of Sample Features", y=1.02)
 plt.show()
+
+# %%
