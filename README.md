@@ -2,6 +2,8 @@
 
 **AI HealthGuard** is a machine learning project designed to analyze health data and predict potential health outcomes. The project utilizes a structured pipeline starting from Exploratory Data Analysis (EDA) to training various machine learning models, culminating in a high-performance XGBoost model for final comparison and prediction.
 
+## *****This project is still in development**
+
 ## 📂 Project Structure
 
 ```text
@@ -55,6 +57,10 @@ python XGBoost.py
   - Performs a comparative analysis of all models.
   - Displays/saves a comparison plot or table showing which model performs best.****
 
-
-
+- Step 4: Running the Streamlit Dashboard
+  Run the Streamlit Dashboard by entering the command
+```
+streamlit run dashboard.py
+```
+- Output: Creates a Streamlit Dashboard at localhost which can be viewed inside the browser.
 
