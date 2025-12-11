@@ -9,7 +9,7 @@ AI-healthguard/
 ├── EDA.py                         # Script for Exploratory Data Analysis and visualization
 ├── train.py                       # Script to train and evaluate baseline machine learning models
 ├── XGBoost.py                     # Script to train the XGBoost model and perform model comparison
-├── processed.cleveland.data       # (Ensure your dataset is placed here)
+├── processed.cleveland.data       # Dataset
 ├── requirements.txt               # List of dependencies
 └── README.md                      # Project documentation
 ```
