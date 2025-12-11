@@ -11,6 +11,7 @@ from sklearn.metrics import (
     roc_auc_score, roc_curve, confusion_matrix, ConfusionMatrixDisplay,
     classification_report
 )
+import joblib
 
 # 3. TRAIN–TEST SPLIT + SCALING
 
@@ -115,4 +116,6 @@ plt.title("Random Forest – ROC Curve")
 plt.legend()
 plt.show()
 
+joblib.dump(rf_clf, 'rf_model.pkl') 
+print("Model saved as rf_model.pkl")
 # %%
