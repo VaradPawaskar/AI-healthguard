@@ -246,7 +246,7 @@ if analyze:
     st.divider()
     st.subheader("🤖 AI Medical Assistant Report")
 
-    with st.spinner("Consulting AI Specialist (Gemini)..."):
+    with st.spinner("Consulting AI Specialist"):
         try:
             # A. Extract Top Features
             feature_names = input_df.columns.tolist()
@@ -287,7 +287,7 @@ if analyze:
             """
 
             # C. Call Gemini
-            model_gemini = genai.GenerativeModel('gemini-2.5-flash') 
+            model_gemini = genai.GenerativeModel('gemini-3-pro') 
             response = model_gemini.generate_content(prompt)
             
             # D. Display Output
