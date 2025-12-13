@@ -287,7 +287,7 @@ if analyze:
             """
 
             # C. Call Gemini
-            model_gemini = genai.GenerativeModel('gemini-3-flash') 
+            model_gemini = genai.GenerativeModel('gemini-2.5-pro') 
             response = model_gemini.generate_content(prompt)
             
             # D. Display Output
