@@ -146,29 +146,29 @@ def user_input_features():
     
     cp = st.sidebar.selectbox("Chest Pain Type", options=[1, 2, 3, 4], 
                               format_func=lambda x: {
-                                  1: "Type 1 (Mod)", 
-                                  2: "Type 2 (Low)", 
-                                  3: "Type 3 (Low)", 
-                                  4: "Type 4 (High)"
+                                  1: "Typical Angina", 
+                                  2: "Atypical Angina", 
+                                  3: "Non-anginal Pain", 
+                                  4: "Asymptomatic"
                               }[x])
 
-    trestbps = st.sidebar.number_input("Rest BP", min_value=50, max_value=250, value=120)
-    chol = st.sidebar.number_input("Cholesterol", min_value=100, max_value=600, value=200)
-    fbs = st.sidebar.selectbox("FBS > 120", options=[0, 1], format_func=lambda x: "True" if x == 1 else "False")
+    trestbps = st.sidebar.number_input("Resting Blood Pressure (mm Hg)", min_value=50, max_value=250, value=120)
+    chol = st.sidebar.number_input("Serum Cholesterol (mg/dl)", min_value=100, max_value=600, value=200)
+    fbs = st.sidebar.selectbox("Fasting Blood Sugar > 120 mg/dl", options=[0, 1], format_func=lambda x: "True" if x == 1 else "False")
     
-    restecg = st.sidebar.selectbox("Rest ECG", options=[0, 1, 2], 
-                                   format_func=lambda x: {0: "Norm", 1: "Abnorm", 2: "Hyper"}[x])
+    restecg = st.sidebar.selectbox("Resting ECG Results", options=[0, 1, 2], 
+                                   format_func=lambda x: {0: "Normal", 1: "ST-T Wave Abnormality", 2: "Left Ventricular Hypertrophy"}[x])
 
-    thalach = st.sidebar.number_input("Max HR", min_value=50, max_value=250, value=150)
-    exang = st.sidebar.selectbox("Ex Angina", options=[0, 1], format_func=lambda x: "Yes" if x == 1 else "No")
-    oldpeak = st.sidebar.number_input("Oldpeak", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
+    thalach = st.sidebar.number_input("Max Heart Rate", min_value=50, max_value=250, value=150)
+    exang = st.sidebar.selectbox("Exercise Induced Angina", options=[0, 1], format_func=lambda x: "Yes" if x == 1 else "No")
+    oldpeak = st.sidebar.number_input("ST Depression (Oldpeak)", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
     
     slope = st.sidebar.selectbox("Slope", options=[0, 1, 2],
-                                 format_func=lambda x: {0: "Up", 1: "Flat", 2: "Down"}[x])
+                                 format_func=lambda x: {0: "Upsloping", 1: "Flat", 2: "Downsloping"}[x])
 
-    ca = st.sidebar.slider("Vessels (ca)", 0, 3, 0)
-    thal = st.sidebar.selectbox("Thal", options=[1, 2, 3], 
-                                format_func=lambda x: {1: "Norm", 2: "Fixed", 3: "Rev"}[x])
+    ca = st.sidebar.slider("Number of Major Vessels (0-3)", 0, 3, 0)
+    thal = st.sidebar.selectbox("Thalassemia", options=[1, 2, 3], 
+                                format_func=lambda x: {1: "Normal", 2: "Fixed Defect", 3: "Reversible Defect"}[x])
 
     data = {
         'age': age, 'sex': sex, 'cp': cp, 'trestbps': trestbps, 'chol': chol,
