@@ -100,4 +100,8 @@ sns.pairplot(df[list(sample_features) + [TARGET_COL]], hue=TARGET_COL)
 plt.suptitle("Pairplot of Sample Features", y=1.02)
 plt.show()
 
+#TEmporary
+print("Unique CP values:", X['cp'].unique())
+print("Average target by CP:", df.groupby('cp')['target'].mean())
+
 # %%
