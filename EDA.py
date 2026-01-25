@@ -94,7 +94,7 @@ target_corr = corr[TARGET_COL].sort_values(ascending=False)
 print("\nTop correlations with target:")
 print(target_corr)
 
-# Pairplot (can be slow – optional)
+# Pairplot of a few features
 sample_features = X.columns[:4]
 sns.pairplot(df[list(sample_features) + [TARGET_COL]], hue=TARGET_COL)
 plt.suptitle("Pairplot of Sample Features", y=1.02)

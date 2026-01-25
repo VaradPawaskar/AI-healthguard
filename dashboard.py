@@ -108,8 +108,6 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# ... (Rest of your code remains exactly the same) ...
-
 # 3. Cache the SHAP Explainer
 @st.cache_resource
 def get_explainer(_model):
@@ -117,7 +115,7 @@ def get_explainer(_model):
 
 explainer = get_explainer(model)
 
-# 4. Header (Centered via CSS/Markdown)
+# 4. Header 
 st.markdown("<h1 style='text-align: center;'>🛡️ AI HealthGuard 🛡️</h1>", unsafe_allow_html=True)
 st.markdown("""
 <div style='text-align: center; margin-bottom: 30px;'>
@@ -180,18 +178,12 @@ def user_input_features():
 
 input_df = user_input_features()
 
-# 6. Main Layout - TABLE CHANGES
-# We remove the columns here so the table takes the FULL width of the container.
 st.subheader("Patient Vitals")
 
-# Using st.table instead of st.dataframe makes it static but "bigger" and easier to read.
-# We also use the CSS above to increase the font size.
 st.table(input_df)
 
-# 7. Prediction Logic with Centered Red Button
 st.write("") # Spacer
 
-# Keep the button centered (columns used here only for the button)
 b1, b2, b3 = st.columns([2, 2, 2])
 
 with b2:
@@ -223,7 +215,6 @@ if analyze:
     with st.spinner("Calculating explainability scores..."):
         shap_values = explainer(input_df)
         
-        # Handle 2D/3D array shapes from Random Forest
         if len(shap_values.values.shape) == 3:
             shap_values_class1 = shap_values[:, :, 1]
         else:
@@ -240,9 +231,7 @@ if analyze:
     * **Blue bars** push the risk score **LOWER**.
     """)
 
-    # ============================================================
     # 9. LLM INTEGRATION LAYER (Google Gemini)
-    # ============================================================
     st.divider()
     st.subheader("🤖 AI Medical Assistant Report")
 
@@ -300,7 +289,6 @@ if analyze:
 
         except Exception as e:
             st.error(f"Error generating report: {e}")
-
-# Sidebar Info
+            
 st.sidebar.markdown("---")
 st.sidebar.info("AI HealthGuard v2.0\nModel: Random Forest + SHAP + Gemini LLM")
