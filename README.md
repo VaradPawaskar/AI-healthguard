@@ -2,8 +2,6 @@
 
 **AI HealthGuard** is a machine learning project designed to analyze health data and predict potential health outcomes. The project utilizes a structured pipeline starting from Exploratory Data Analysis (EDA) to training various machine learning models, culminating in a high-performance XGBoost model for final comparison and prediction.
 
-## *****This project is still in development**
-
 ## 📂 Project Structure
 
 ```text
